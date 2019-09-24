@@ -1,4 +1,4 @@
-const imagePath = "../assets/image";
+const imagePath = "../assets/images";
 
 export const images = ["bg", "bullet_enemy", "bullet_ship", "enemy", "ship"];
 

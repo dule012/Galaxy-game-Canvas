@@ -1,4 +1,4 @@
-import { imagesPath } from "../constants/index";
+import { imagesPath } from "../constants/index.js";
 
 const getSingleImage = src =>
   new Promise((res, rej) => {
