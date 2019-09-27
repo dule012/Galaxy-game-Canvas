@@ -8,4 +8,10 @@ body {
   display: grid;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+}
+
+#canvas {
+  width: 600px;
+  height: 360px;
 }

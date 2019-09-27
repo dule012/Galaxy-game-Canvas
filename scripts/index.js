@@ -1,40 +1,44 @@
+import Game from "./components/game.js";
+import Background from "./components/background.js";
 import { images } from "../constants/index.js";
-import {
-  loadImages,
-  transformArrayToObject,
-  getHtmlElement
-} from "../utility/helpers.js";
+import { loadImages, transformArrayToObject } from "../utility/helpers.js";
 
-const CANVAS = "#canvas";
-const CANVAS_CONTEXT = "2d";
-
-class Game {
+class App extends Game {
   constructor() {
-    this.ctx = getHtmlElement(CANVAS).getContext(CANVAS_CONTEXT);
-    this.animationFrame = (
-      window.requestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      setTimeout(this.loop, 16)
-    ).bind(window);
+    super();
+    this.con = new Game();
   }
 
   init() {
     Promise.all(loadImages()).then(data => {
-      this.animationFrame(
+      this.animationFrameInit();
+      this.animationFrameID = requestAnimationFrame(
         this.loop.bind(this, transformArrayToObject(images, data))
       );
     });
   }
 
-  loop(imagesObj) {
-    const { bg, bullet_enemy, bullet_ship, enemy, ship } = imagesObj;
-    this.ctx.drawImage(bg, 10, 10, 100, 100);
+  animationFrameInit() {
+    window.requestAnimFrame =
+      window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      ((/* function */ callback, /* DOMElement */ element) => {
+        window.setTimeout(callback, 1000 / 60);
+      });
   }
 
-  endGame() {}
+  loop(imagesObj) {
+    const { bg, bullet_enemy, bullet_ship, enemy, ship } = imagesObj;
+    this.con.update();
+    this.animationFrameID = window.requestAnimationFrame(
+      this.loop.bind(this, imagesObj)
+    );
+
+    new Background(this.animationFrameID, bg).draw();
+  }
 }
 
-new Game().init();
+new App().init();

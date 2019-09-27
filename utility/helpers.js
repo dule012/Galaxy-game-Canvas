@@ -11,9 +11,9 @@ const getSingleImage = src =>
 
 export const loadImages = () => imagesPath.map(item => getSingleImage(item));
 
-export const transformArrayToObject = (arrOfPropNames, data) => {
+export const transformArrayToObject = (arrOfPropNames, dataArr) => {
   const obj = {};
-  data.map((item, index) => (obj[arrOfPropNames[index]] = item));
+  dataArr.map((item, index) => (obj[arrOfPropNames[index]] = item));
   return obj;
 };
 

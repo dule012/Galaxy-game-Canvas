@@ -9,3 +9,10 @@ export const imagesPath = [
   `${imagePath}/enemy.png`,
   `${imagePath}/ship.png`
 ];
+
+/*             BACKGROUND            */
+
+export const background = {
+  x: 0,
+  y: 0
+};
