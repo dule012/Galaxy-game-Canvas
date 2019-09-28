@@ -1,15 +1,16 @@
-import Game from "./game.js";
+import Container from "../container/index.js";
 import { background } from "../../constants/index.js";
 
-class Background extends Game {
-  constructor(animationFrameID, bg) {
+class Background extends Container {
+  constructor(animationFrameID, image, gameData) {
     super();
-    this.bg = bg;
     this.animationFrameID = animationFrameID;
+    this.image = image;
+    this.gameData = gameData;
   }
 
   draw() {
-    this.ctx.drawImage(this.bg, background.x, background.y);
+    this.ctx.drawImage(this.image, background.x, background.y);
     super.endGame(this.animationFrameID);
   }
 }

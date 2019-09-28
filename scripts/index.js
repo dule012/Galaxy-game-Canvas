@@ -1,12 +1,13 @@
-import Game from "./components/game.js";
+import Container from "./container/index.js";
 import Background from "./components/background.js";
+import Ship from "./components/ship.js";
 import { images } from "../constants/index.js";
 import { loadImages, transformArrayToObject } from "../utility/helpers.js";
 
-class App extends Game {
+class App extends Container {
   constructor() {
     super();
-    this.con = new Game();
+    this.container = new Container();
   }
 
   init() {
@@ -32,12 +33,15 @@ class App extends Game {
 
   loop(imagesObj) {
     const { bg, bullet_enemy, bullet_ship, enemy, ship } = imagesObj;
-    this.con.update();
+
+    this.container.update();
+
     this.animationFrameID = window.requestAnimationFrame(
       this.loop.bind(this, imagesObj)
     );
 
-    new Background(this.animationFrameID, bg).draw();
+    new Background(this.animationFrameID, bg, this.container).draw();
+    new Ship(this.animationFrameID, ship, this.container).draw();
   }
 }
 
