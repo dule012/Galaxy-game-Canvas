@@ -1,4 +1,5 @@
 import Container from "../container/index.js";
+import { shipSize } from "../../constants/index.js";
 
 class Ship extends Container {
   constructor(animationFrameId, image, gameData) {
@@ -9,7 +10,15 @@ class Ship extends Container {
   }
 
   draw() {
-    this.ctx.drawImage(this.image, 0, 0);
+    const { shipX, shipY } = this.gameData;
+
+    this.ctx.drawImage(
+      this.image,
+      shipX,
+      shipY,
+      shipSize.width,
+      shipSize.height
+    );
   }
 }
 

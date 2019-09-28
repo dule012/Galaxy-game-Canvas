@@ -1,21 +1,31 @@
 import Container from "./container/index.js";
 import Background from "./components/background.js";
 import Ship from "./components/ship.js";
-import { images } from "../constants/index.js";
+import { images, eventKeyCode } from "../constants/index.js";
 import { loadImages, transformArrayToObject } from "../utility/helpers.js";
 
-class App extends Container {
+class App {
   constructor() {
-    super();
     this.container = new Container();
   }
 
   init() {
     Promise.all(loadImages()).then(data => {
+      this.initEvents();
       this.animationFrameInit();
+
       this.animationFrameID = requestAnimationFrame(
         this.loop.bind(this, transformArrayToObject(images, data))
       );
+    });
+  }
+
+  initEvents() {
+    window.addEventListener("keydown", e => {
+      this.container[eventKeyCode[e.keyCode]] = true;
+    });
+    window.addEventListener("keyup", e => {
+      this.container[eventKeyCode[e.keyCode]] = false;
     });
   }
 
