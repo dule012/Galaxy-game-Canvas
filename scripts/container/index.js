@@ -23,7 +23,10 @@ class Container {
     this.shipY = shipStartPosition.y;
     this.enemies = [];
     this.shipBullets = [];
+    this.shipBulletX = this.shipX;
+    this.shipBulletY = this.shipY;
     this.enemiesBullets = [];
+    this.score = 0;
   }
 
   endGame(id) {
@@ -41,22 +44,22 @@ class Container {
     const { clientWidth, clientHeight } = this.ctx.canvas;
 
     if (arrowRight) {
-      this.shipX += shipSpeed;
+      this.shipBulletX = this.shipX += shipSpeed;
       if (this.shipX + shipSize.width >= clientWidth)
-        this.shipX = clientWidth - shipSize.width;
+        this.shipBulletX = this.shipX = clientWidth - shipSize.width;
     }
     if (arrowLeft) {
-      this.shipX -= shipSpeed;
-      if (this.shipX <= 0) this.shipX = 0;
+      this.shipBulletX = this.shipX -= shipSpeed;
+      if (this.shipX <= 0) this.shipBulletX = this.shipX = 0;
     }
     if (arrowUp) {
-      this.shipY -= shipSpeed;
-      if (this.shipY <= 0) this.shipY = 0;
+      this.shipBulletY = this.shipY -= shipSpeed;
+      if (this.shipY <= 0) this.shipBulletY = this.shipY = 0;
     }
     if (arrowDown) {
-      this.shipY += shipSpeed;
+      this.shipBulletY = this.shipY += shipSpeed;
       if (this.shipY + shipSize.height >= clientHeight)
-        this.shipY = clientHeight - shipSize.height;
+        this.shipBulletY = this.shipY = clientHeight - shipSize.height;
     }
 
     this.backgroundY += backgroundSlidingSpeed;

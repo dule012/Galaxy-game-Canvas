@@ -10,15 +10,10 @@ class Ship extends Container {
   }
 
   draw() {
+    const { ctx, image } = this;
     const { shipX, shipY } = this.gameData;
 
-    this.ctx.drawImage(
-      this.image,
-      shipX,
-      shipY,
-      shipSize.width,
-      shipSize.height
-    );
+    ctx.drawImage(image, shipX, shipY, shipSize.width, shipSize.height);
   }
 }
 

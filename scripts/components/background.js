@@ -9,18 +9,13 @@ class Background extends Container {
   }
 
   draw() {
+    const { ctx, image } = this;
     const { backgroundX, backgroundY } = this.gameData;
     const { clientWidth, clientHeight } = this.ctx.canvas;
 
-    this.ctx.drawImage(
-      this.image,
-      backgroundX,
-      backgroundY,
-      clientWidth,
-      clientHeight
-    );
-    this.ctx.drawImage(
-      this.image,
+    ctx.drawImage(image, backgroundX, backgroundY, clientWidth, clientHeight);
+    ctx.drawImage(
+      image,
       backgroundX,
       clientHeight - backgroundY,
       clientWidth,
@@ -30,7 +25,6 @@ class Background extends Container {
       clientWidth,
       backgroundY
     );
-    super.endGame(this.animationFrameID);
   }
 }
 

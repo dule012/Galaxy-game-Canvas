@@ -4,9 +4,9 @@ const getSingleImage = src =>
   new Promise((res, rej) => {
     const image = new Image();
     image.src = src;
-    image.onload = () => {
+    image.addEventListener("load", () => {
       res(image);
-    };
+    });
   });
 
 export const loadImages = () => imagesPath.map(item => getSingleImage(item));

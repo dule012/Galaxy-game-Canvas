@@ -22,6 +22,10 @@ export const eventKeyCode = {
   32: "space"
 };
 
+/*              SCORE                 */
+
+export const shotEnemyScore = 10;
+
 /*             CANVAS                 */
 
 export const CANVAS = "#canvas";
@@ -52,3 +56,14 @@ export const shipStartPosition = {
 };
 
 export const shipSpeed = 2.2;
+
+/*              BULLETS SHIP           */
+
+export const bulletsPairPosition = {
+  firstBulletX: 5,
+  secondBulletX: 33,
+  bulletY: 6
+};
+export const shipBulletHeight = 14;
+export const bulletSpeed = 2.2;
+export const timeBetweenShipBullets = 300;
