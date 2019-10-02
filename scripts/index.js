@@ -22,19 +22,34 @@ class App {
   }
 
   initEvents() {
-    window.addEventListener("keydown", this.handleKeyDown.bind(this), false);
-    window.addEventListener("keyup", this.handleKeyUp.bind(this), false);
+    window.addEventListener("keydown", this.handleKeyDown(this), false);
+    window.addEventListener("keyup", this.handleKeyUp(this), false);
   }
 
-  handleKeyDown(e) {
+  removeEventListeners() {
+    window.removeEventListener("keydown", this.keyDownListener, false);
+    window.removeEventListener("keyup", this.keyUpListener, false);
+  }
+
+  keyDown(e) {
     console.log("not removed keydown event listener");
     this.container[eventKeyCode[e.keyCode]] = true;
     if (eventKeyCode[e.keyCode] === SPACE && this.container.fireShipBullet)
       this.container.setShipBullet(this.loadedImages.bullet_ship);
   }
 
-  handleKeyUp(e) {
+  handleKeyDown(obj) {
+    obj.keyDownListener = e => obj.keyDown.call(obj, e);
+    return obj.keyDownListener;
+  }
+
+  keyUp(e) {
     this.container[eventKeyCode[e.keyCode]] = false;
+  }
+
+  handleKeyUp(obj) {
+    obj.keyUpListener = e => obj.keyUp.call(obj, e);
+    return obj.keyUpListener;
   }
 
   animationFrameInit() {
@@ -60,11 +75,10 @@ class App {
 
     this.container.updateShipBullet();
     this.container.update();
-    new Background().endGame(
-      this.animationFrameID,
-      this.handleKeyDown.bind(this),
-      this.handleKeyUp.bind(this)
-    );
+    // new Background().endGame(
+    //   this.animationFrameID,
+    //   this.removeEventListeners.bind(this)
+    // );
   }
 }
 

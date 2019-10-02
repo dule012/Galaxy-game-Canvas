@@ -34,14 +34,9 @@ class Container {
     this.score = 0;
   }
 
-  endGame(id, keyDownHandler, keyUpHandler) {
-    this.removeEventListeners(keyDownHandler, keyUpHandler);
+  endGame(id, removeEventListenersHandler) {
+    removeEventListenersHandler();
     cancelAnimationFrame(id);
-  }
-
-  removeEventListeners(keyDownHandler, keyUpHandler) {
-    window.removeEventListener("keydown", keyDownHandler, false);
-    window.removeEventListener("keyup", keyUpHandler, false);
   }
 
   setShipBullet(image) {
