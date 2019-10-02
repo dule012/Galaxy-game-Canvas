@@ -1,3 +1,4 @@
+import ShipBullet from "../components/shipBullet.js";
 import { getHtmlElement } from "../../utility/helpers.js";
 import {
   CANVAS,
@@ -6,7 +7,10 @@ import {
   shipStartPosition,
   shipSpeed,
   backgroundStartPosition,
-  backgroundSlidingSpeed
+  backgroundSlidingSpeed,
+  shipBulletHeight,
+  timeBetweenShipBullets,
+  bulletsPairPosition
 } from "../../constants/index.js";
 
 class Container {
@@ -25,18 +29,42 @@ class Container {
     this.shipBullets = [];
     this.shipBulletX = this.shipX;
     this.shipBulletY = this.shipY;
+    this.fireShipBullet = true;
     this.enemiesBullets = [];
     this.score = 0;
   }
 
-  endGame(id, keyDownFunc, keyUpFunc) {
-    this.removeEventListeners(keyDownFunc, keyUpFunc);
+  endGame(id, keyDownHandler, keyUpHandler) {
+    this.removeEventListeners(keyDownHandler, keyUpHandler);
     cancelAnimationFrame(id);
   }
 
-  removeEventListeners(keyDownFunc, keyUpFunc) {
-    window.removeEventListener("keydown", keyDownFunc);
-    window.removeEventListener("keyup", keyUpFunc);
+  removeEventListeners(keyDownHandler, keyUpHandler) {
+    window.removeEventListener("keydown", keyDownHandler, false);
+    window.removeEventListener("keyup", keyUpHandler, false);
+  }
+
+  setShipBullet(image) {
+    const shipBulletData = {
+      ctx: this.ctx,
+      shipBulletX: this.shipBulletX,
+      shipBulletY: this.shipBulletY
+    };
+    this.shipBullets.push(
+      new ShipBullet(image, shipBulletData, bulletsPairPosition.firstBulletX),
+      new ShipBullet(image, shipBulletData, bulletsPairPosition.secondBulletX)
+    );
+    this.fireShipBullet = !this.fireShipBullet;
+    setTimeout(() => {
+      this.fireShipBullet = !this.fireShipBullet;
+    }, timeBetweenShipBullets);
+  }
+
+  updateShipBullet() {
+    this.shipBullets = this.shipBullets.filter(
+      item => item.gameData.shipBulletY >= 0 - shipBulletHeight
+    );
+    this.shipBullets.map(item => item.update());
   }
 
   update() {

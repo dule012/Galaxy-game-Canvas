@@ -1,13 +1,7 @@
 import Container from "./container/index.js";
 import Background from "./components/background.js";
 import Ship from "./components/ship.js";
-import ShipBulletsPair from "./components/shipBulletsPair.js";
-import {
-  images,
-  eventKeyCode,
-  shipBulletHeight,
-  timeBetweenShipBullets
-} from "../constants/index.js";
+import { images, eventKeyCode } from "../constants/index.js";
 import { loadImages, transformArrayToObject } from "../utility/helpers.js";
 
 const SPACE = "space";
@@ -15,7 +9,6 @@ const SPACE = "space";
 class App {
   constructor() {
     this.container = new Container();
-    this.fireShipBullet = true;
   }
 
   init() {
@@ -29,15 +22,15 @@ class App {
   }
 
   initEvents() {
-    window.addEventListener("keydown", this.handleKeyDown.bind(this));
-    window.addEventListener("keyup", this.handleKeyUp.bind(this));
+    window.addEventListener("keydown", this.handleKeyDown.bind(this), false);
+    window.addEventListener("keyup", this.handleKeyUp.bind(this), false);
   }
 
   handleKeyDown(e) {
     console.log("not removed keydown event listener");
     this.container[eventKeyCode[e.keyCode]] = true;
-    if (eventKeyCode[e.keyCode] === SPACE && this.fireShipBullet)
-      this.setShipBulletsPair();
+    if (eventKeyCode[e.keyCode] === SPACE && this.container.fireShipBullet)
+      this.container.setShipBullet(this.loadedImages.bullet_ship);
   }
 
   handleKeyUp(e) {
@@ -56,23 +49,6 @@ class App {
       });
   }
 
-  setShipBulletsPair() {
-    this.container.shipBullets.push(
-      new ShipBulletsPair(this.loadedImages.bullet_ship, { ...this.container })
-    );
-    this.fireShipBullet = !this.fireShipBullet;
-    setTimeout(() => {
-      this.fireShipBullet = !this.fireShipBullet;
-    }, timeBetweenShipBullets);
-  }
-
-  updateShipBulletsPair() {
-    this.container.shipBullets = this.container.shipBullets.filter(
-      item => item.gameData.shipBulletY >= 0 - shipBulletHeight
-    );
-    this.container.shipBullets.map(item => item.update());
-  }
-
   loop() {
     const { bg, bullet_enemy, enemy, ship } = this.loadedImages;
 
@@ -82,12 +58,12 @@ class App {
     new Ship(this.animationFrameID, ship, { ...this.container }).draw();
     this.container.shipBullets.map(shipBulletsPair => shipBulletsPair.draw());
 
+    this.container.updateShipBullet();
     this.container.update();
-    this.updateShipBulletsPair();
     new Background().endGame(
       this.animationFrameID,
-      this.handleKeyDown,
-      this.handleKeyUp
+      this.handleKeyDown.bind(this),
+      this.handleKeyUp.bind(this)
     );
   }
 }
