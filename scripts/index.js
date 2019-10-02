@@ -29,19 +29,19 @@ class App {
   }
 
   initEvents() {
-    window.addEventListener("keydown", e => {
-      this.container[eventKeyCode[e.keyCode]] = true;
-      if (eventKeyCode[e.keyCode] === SPACE && this.fireShipBullet) {
-        this.setShipBulletsPair();
-        this.fireShipBullet = !this.fireShipBullet;
-        setTimeout(() => {
-          this.fireShipBullet = !this.fireShipBullet;
-        }, timeBetweenShipBullets);
-      }
-    });
-    window.addEventListener("keyup", e => {
-      this.container[eventKeyCode[e.keyCode]] = false;
-    });
+    window.addEventListener("keydown", this.handleKeyDown.bind(this));
+    window.addEventListener("keyup", this.handleKeyUp.bind(this));
+  }
+
+  handleKeyDown(e) {
+    console.log("not removed keydown event listener");
+    this.container[eventKeyCode[e.keyCode]] = true;
+    if (eventKeyCode[e.keyCode] === SPACE && this.fireShipBullet)
+      this.setShipBulletsPair();
+  }
+
+  handleKeyUp(e) {
+    this.container[eventKeyCode[e.keyCode]] = false;
   }
 
   animationFrameInit() {
@@ -60,6 +60,10 @@ class App {
     this.container.shipBullets.push(
       new ShipBulletsPair(this.loadedImages.bullet_ship, { ...this.container })
     );
+    this.fireShipBullet = !this.fireShipBullet;
+    setTimeout(() => {
+      this.fireShipBullet = !this.fireShipBullet;
+    }, timeBetweenShipBullets);
   }
 
   updateShipBulletsPair() {
@@ -80,7 +84,11 @@ class App {
 
     this.container.update();
     this.updateShipBulletsPair();
-    new Background().endGame(this.animationFrameID);
+    new Background().endGame(
+      this.animationFrameID,
+      this.handleKeyDown,
+      this.handleKeyUp
+    );
   }
 }
 

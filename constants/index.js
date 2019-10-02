@@ -66,4 +66,4 @@ export const bulletsPairPosition = {
 };
 export const shipBulletHeight = 14;
 export const bulletSpeed = 2.2;
-export const timeBetweenShipBullets = 300;
+export const timeBetweenShipBullets = 200;

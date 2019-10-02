@@ -29,14 +29,14 @@ class Container {
     this.score = 0;
   }
 
-  endGame(id) {
-    this.removeEventListeners();
+  endGame(id, keyDownFunc, keyUpFunc) {
+    this.removeEventListeners(keyDownFunc, keyUpFunc);
     cancelAnimationFrame(id);
   }
 
-  removeEventListeners() {
-    window.removeEventListener("keydown", () => {});
-    window.removeEventListener("keyup", () => {});
+  removeEventListeners(keyDownFunc, keyUpFunc) {
+    window.removeEventListener("keydown", keyDownFunc);
+    window.removeEventListener("keyup", keyUpFunc);
   }
 
   update() {
