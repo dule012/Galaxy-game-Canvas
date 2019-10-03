@@ -1,4 +1,4 @@
-import { enemySpeed } from "../../constants/index.js";
+import { enemySpeed, enemyData } from "../../constants/index.js";
 
 class Enemy {
   constructor(image, gameData) {
@@ -8,11 +8,21 @@ class Enemy {
 
   draw() {
     const { ctx, enemyX, enemyY } = this.gameData;
-    ctx.drawImage(this.image, enemyX, enemyY);
+    ctx.drawImage(
+      this.image,
+      enemyX,
+      enemyY,
+      enemyData.width,
+      enemyData.height
+    );
   }
 
-  update() {
+  updateForwardMove() {
     this.gameData.enemyX += enemySpeed;
+  }
+
+  updateBackwardMove() {
+    this.gameData.enemyX -= enemySpeed;
   }
 }
 

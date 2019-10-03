@@ -1,22 +1,18 @@
 import { bulletsPairPosition, bulletSpeed } from "../../constants/index.js";
 
 class ShipBullet {
-  constructor(image, gameData, shipBulletOrder) {
+  constructor(image, gameData) {
     this.image = image;
     this.gameData = gameData;
-    this.shipBulletOrder = shipBulletOrder;
   }
 
   draw() {
-    const { image, gameData, shipBulletOrder } = this;
+    const { image, gameData } = this;
     const { ctx, shipBulletX, shipBulletY } = gameData;
 
-    ctx.drawImage(
-      image,
-      shipBulletX + shipBulletOrder,
-      shipBulletY - bulletsPairPosition.bulletY
-    );
+    ctx.drawImage(image, shipBulletX, shipBulletY);
   }
+
   update() {
     this.gameData.shipBulletY -= bulletSpeed;
   }

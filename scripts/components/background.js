@@ -1,17 +1,8 @@
-import Container from "../container/index.js";
-
-class Background extends Container {
-  constructor(animationFrameID, image, gameData) {
-    super();
-    this.animationFrameID = animationFrameID;
-    this.image = image;
-    this.gameData = gameData;
-  }
-
-  draw() {
-    const { ctx, image } = this;
-    const { backgroundX, backgroundY } = this.gameData;
-    const { clientWidth, clientHeight } = this.ctx.canvas;
+class Background {
+  draw(image, gameData) {
+    // const { image } = this;
+    const { ctx, backgroundX, backgroundY } = gameData;
+    const { clientWidth, clientHeight } = ctx.canvas;
 
     ctx.drawImage(image, backgroundX, backgroundY, clientWidth, clientHeight);
     ctx.drawImage(

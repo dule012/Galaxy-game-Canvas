@@ -71,7 +71,7 @@ export const bulletsPairPosition = {
   bulletY: 6
 };
 export const shipBulletHeight = 14;
-export const bulletSpeed = 1.4;
+export const bulletSpeed = 2.4;
 export const timeBetweenShipBullets = 200;
 export const shipBulletSize = {
   width: 2,
@@ -83,7 +83,6 @@ export const shipBulletSize = {
 export const enemyData = {
   width: 38,
   height: 28,
-  enemiesNumber: 18,
   enemiesInRow: 6,
   enemiesRows: 3,
   firstEnemyPos: { x: 30, y: 30 },

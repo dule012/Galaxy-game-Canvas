@@ -9,6 +9,8 @@ const SPACE = "space";
 class App {
   constructor() {
     this.container = new Container();
+    this.backgroundComponent = new Background();
+    this.shipComponent = new Ship();
   }
 
   init() {
@@ -33,7 +35,6 @@ class App {
   }
 
   keyDown(e) {
-    console.log("not removed keydown event listener");
     this.container[eventKeyCode[e.keyCode]] = true;
     if (eventKeyCode[e.keyCode] === SPACE && this.container.fireShipBullet)
       this.container.setShipBullet(this.loadedImages.bullet_ship);
@@ -70,16 +71,14 @@ class App {
 
     this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
 
-    new Background(this.animationFrameID, background, {
-      ...this.container
-    }).draw();
-    new Ship(this.animationFrameID, ship, { ...this.container }).draw();
+    this.backgroundComponent.draw(background, this.container);
+    this.shipComponent.draw(ship, this.container);
     this.container.enemies.map(item => item.draw());
     this.container.shipBullets.map(shipBulletsPair => shipBulletsPair.draw());
 
     this.container.update();
 
-    new Background().endGame(
+    new Ship().endGame(
       this.animationFrameID,
       this.removeEventListeners.bind(this)
     );
