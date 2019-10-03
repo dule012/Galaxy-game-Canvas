@@ -16,6 +16,7 @@ class App {
       this.loadedImages = transformArrayToObject(images, data);
       this.initEvents();
       this.animationFrameInit();
+      this.container.initEnemies(this.loadedImages.enemy);
 
       this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
     });
@@ -65,16 +66,19 @@ class App {
   }
 
   loop() {
-    const { bg, bullet_enemy, enemy, ship } = this.loadedImages;
+    const { background, bullet_enemy, ship } = this.loadedImages;
 
     this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
 
-    new Background(this.animationFrameID, bg, { ...this.container }).draw();
+    new Background(this.animationFrameID, background, {
+      ...this.container
+    }).draw();
     new Ship(this.animationFrameID, ship, { ...this.container }).draw();
+    this.container.enemies.map(item => item.draw());
     this.container.shipBullets.map(shipBulletsPair => shipBulletsPair.draw());
 
-    this.container.updateShipBullet();
     this.container.update();
+
     new Background().endGame(
       this.animationFrameID,
       this.removeEventListeners.bind(this)

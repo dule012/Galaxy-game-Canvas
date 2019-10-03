@@ -1,3 +1,4 @@
+import Enemy from "../components/enemy.js";
 import ShipBullet from "../components/shipBullet.js";
 import { getHtmlElement } from "../../utility/helpers.js";
 import {
@@ -10,7 +11,9 @@ import {
   backgroundSlidingSpeed,
   shipBulletHeight,
   timeBetweenShipBullets,
-  bulletsPairPosition
+  bulletsPairPosition,
+  shipBulletSize,
+  enemyData
 } from "../../constants/index.js";
 
 class Container {
@@ -25,11 +28,11 @@ class Container {
     this.backgroundY = backgroundStartPosition.y;
     this.shipX = shipStartPosition.x;
     this.shipY = shipStartPosition.y;
-    this.enemies = [];
     this.shipBullets = [];
     this.shipBulletX = this.shipX;
     this.shipBulletY = this.shipY;
     this.fireShipBullet = true;
+    this.enemies = [];
     this.enemiesBullets = [];
     this.score = 0;
   }
@@ -37,6 +40,30 @@ class Container {
   endGame(id, removeEventListenersHandler) {
     removeEventListenersHandler();
     cancelAnimationFrame(id);
+  }
+
+  initEnemies(image) {
+    let enemyY = enemyData.firstEnemyPos.y;
+    this.enemies = [...Array(enemyData.enemiesRows)]
+      .map(() => {
+        let enemyX = enemyData.firstEnemyPos.x;
+        const enemiesRow = [...Array(enemyData.enemiesInRow)].map(() => {
+          const enemy = new Enemy(image, {
+            ctx: this.ctx,
+            enemyX,
+            enemyY
+          });
+          enemyX += enemyData.marginRight + enemyData.width;
+          return enemy;
+        });
+        enemyY += enemyData.marginTop + enemyData.height;
+        return enemiesRow;
+      })
+      .flat(1);
+  }
+
+  updateEnemy() {
+    this.enemies.map(item => item.update());
   }
 
   setShipBullet(image) {
@@ -49,7 +76,9 @@ class Container {
       new ShipBullet(image, shipBulletData, bulletsPairPosition.firstBulletX),
       new ShipBullet(image, shipBulletData, bulletsPairPosition.secondBulletX)
     );
+
     this.fireShipBullet = !this.fireShipBullet;
+
     setTimeout(() => {
       this.fireShipBullet = !this.fireShipBullet;
     }, timeBetweenShipBullets);
@@ -60,6 +89,21 @@ class Container {
       item => item.gameData.shipBulletY >= 0 - shipBulletHeight
     );
     this.shipBullets.map(item => item.update());
+  }
+
+  checkEnemyShoted() {
+    this.shipBullets = this.shipBullets.filter(item => {
+      const shotedEnemy = this.enemies.find(
+        enemy =>
+          item.gameData.shipBulletX >= enemy.gameData.enemyX &&
+          item.gameData.shipBulletX <=
+            enemy.gameData.enemyX + enemyData.width &&
+          item.gameData.shipBulletY <=
+            enemy.gameData.enemyY + enemyData.height &&
+          item.gameData.shipBulletY >= enemy.gameData.enemyY
+      );
+      return Boolean(!shotedEnemy);
+    });
   }
 
   update() {
@@ -87,6 +131,10 @@ class Container {
 
     this.backgroundY += backgroundSlidingSpeed;
     if (this.backgroundY >= clientHeight) this.backgroundY = 0;
+
+    this.checkEnemyShoted();
+    this.updateEnemy();
+    this.updateShipBullet();
   }
 }
 
