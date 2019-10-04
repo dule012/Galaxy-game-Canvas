@@ -33,6 +33,7 @@ class Container {
     this.shipBulletY = this.shipY;
     this.fireShipBullet = true;
     this.enemies = [];
+    this.isEnemiesMoveForward = true;
     this.enemiesBullets = [];
     this.score = 0;
   }
@@ -63,7 +64,21 @@ class Container {
   }
 
   updateEnemy() {
-    this.enemies.map(item => item.updateForwardMove());
+    if (this.isEnemiesMoveForward) {
+      this.enemies.map(item => item.updateForwardMove());
+      if (
+        this.enemies.find(
+          item =>
+            item.gameData.enemyX + enemyData.width >=
+            this.ctx.canvas.clientWidth
+        )
+      )
+        this.isEnemiesMoveForward = false;
+    } else {
+      this.enemies.map(item => item.updateBackwardMove());
+      if (this.enemies.find(item => item.gameData.enemyX <= 0))
+        this.isEnemiesMoveForward = true;
+    }
   }
 
   setShipBullet(image) {

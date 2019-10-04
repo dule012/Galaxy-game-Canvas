@@ -78,10 +78,10 @@ class App {
 
     this.container.update();
 
-    new Ship().endGame(
-      this.animationFrameID,
-      this.removeEventListeners.bind(this)
-    );
+    // new Ship().endGame(
+    //   this.animationFrameID,
+    //   this.removeEventListeners.bind(this)
+    // );
   }
 }
 
