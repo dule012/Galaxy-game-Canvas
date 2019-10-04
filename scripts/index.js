@@ -16,9 +16,11 @@ class App {
   init() {
     Promise.all(loadImages()).then(data => {
       this.loadedImages = transformArrayToObject(images, data);
+      this.container.loadedImages = this.loadedImages;
       this.initEvents();
       this.animationFrameInit();
       this.container.initEnemies(this.loadedImages.enemy);
+      this.container.setEnemyBullet();
 
       this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
     });
@@ -75,8 +77,12 @@ class App {
     this.shipComponent.draw(ship, this.container);
     this.container.enemies.map(item => item.draw());
     this.container.shipBullets.map(shipBulletsPair => shipBulletsPair.draw());
+    this.container.enemiesBullets.map(item => item.draw());
 
-    this.container.update();
+    this.container.update(
+      this.animationFrameID,
+      this.removeEventListeners.bind(this)
+    );
 
     // new Ship().endGame(
     //   this.animationFrameID,

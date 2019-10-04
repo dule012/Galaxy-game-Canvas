@@ -1,4 +1,5 @@
 import Enemy from "../components/enemy.js";
+import EnemyBullet from "../components/enemyBullet.js";
 import ShipBullet from "../components/shipBullet.js";
 import { getHtmlElement } from "../../utility/helpers.js";
 import {
@@ -13,7 +14,9 @@ import {
   timeBetweenShipBullets,
   bulletsPairPosition,
   shipBulletSize,
-  enemyData
+  enemyData,
+  enemyBulletData,
+  frequentEnemyFireBullets
 } from "../../constants/index.js";
 
 class Container {
@@ -39,8 +42,17 @@ class Container {
   }
 
   endGame(id, removeEventListenersHandler) {
-    removeEventListenersHandler();
-    cancelAnimationFrame(id);
+    const isShipShot = this.enemiesBullets.find(
+      enemy =>
+        enemy.gameData.enemyBulletX >= this.shipX &&
+        enemy.gameData.enemyBulletX <= this.shipX + shipSize.width &&
+        enemy.gameData.enemyBulletY >= this.shipY &&
+        enemy.gameData.enemyBulletY <= this.shipY + shipSize.height
+    );
+    if (isShipShot) {
+      removeEventListenersHandler();
+      cancelAnimationFrame(id);
+    }
   }
 
   initEnemies(image) {
@@ -131,6 +143,37 @@ class Container {
     this.shipBullets = filteredShipBullets;
   }
 
+  setEnemyBullet() {
+    const numberOfEnemyBullets = () =>
+      Math.ceil(Math.random() * (this.enemies.length - 1));
+    const modifiedEnemyBulletObj = obj => ({
+      ...obj,
+      enemyBulletX:
+        obj.enemyX + enemyData.width / 2 - enemyBulletData.width / 2,
+      enemyBulletY: obj.enemyY + enemyData.height
+    });
+
+    const newFiredEnemyBullets = [...Array(numberOfEnemyBullets())]
+      .map(() => numberOfEnemyBullets())
+      .map(
+        item =>
+          new EnemyBullet(
+            this.loadedImages.bullet_enemy,
+            modifiedEnemyBulletObj(this.enemies[item].gameData)
+          )
+      );
+    this.enemiesBullets = [...this.enemiesBullets, ...newFiredEnemyBullets];
+
+    setTimeout(this.setEnemyBullet.bind(this), frequentEnemyFireBullets);
+  }
+
+  updateEnemyBullet() {
+    this.enemiesBullets = this.enemiesBullets.filter(
+      item => item.gameData.enemyBulletY <= this.ctx.canvas.clientHeight
+    );
+    this.enemiesBullets.map(item => item.update());
+  }
+
   updateShip() {
     const { arrowLeft, arrowUp, arrowRight, arrowDown } = this;
     const { clientWidth, clientHeight } = this.ctx.canvas;
@@ -158,10 +201,12 @@ class Container {
     if (this.backgroundY >= clientHeight) this.backgroundY = 0;
   }
 
-  update() {
+  update(animationFrameID, removeEventListeners) {
+    this.endGame(animationFrameID, removeEventListeners);
     this.checkEnemyShoted();
     this.updateShip();
     this.updateEnemy();
+    this.updateEnemyBullet();
     this.updateShipBullet();
   }
 }

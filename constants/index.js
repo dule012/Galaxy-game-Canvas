@@ -83,11 +83,20 @@ export const shipBulletSize = {
 export const enemyData = {
   width: 38,
   height: 28,
-  enemiesInRow: 6,
+  enemiesInRow: 8,
   enemiesRows: 3,
   firstEnemyPos: { x: 30, y: 30 },
-  marginRight: 20,
+  marginRight: 17,
   marginTop: 20
 };
 
 export const enemySpeed = 1.5;
+
+/*             BULLETS ENEMY            */
+
+export const enemyBulletData = {
+  width: 2,
+  height: 14
+};
+export const frequentEnemyFireBullets = 1000;
+export const enemyBulletSpeed = 4.2;
