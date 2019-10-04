@@ -61,7 +61,7 @@ export const shipStartPosition = {
   y: canvasHeight - shipSize.height
 };
 
-export const shipSpeed = 2.2;
+export const shipSpeed = 3;
 
 /*              BULLETS SHIP           */
 
@@ -86,7 +86,7 @@ export const enemyData = {
   enemiesInRow: 8,
   enemiesRows: 3,
   firstEnemyPos: { x: 30, y: 30 },
-  marginRight: 17,
+  marginRight: 22,
   marginTop: 20
 };
 
