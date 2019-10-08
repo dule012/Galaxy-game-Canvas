@@ -2,7 +2,7 @@
 
 const imagePath = "../assets/images";
 
-export const images = [
+export const imagesName = [
   "background",
   "bullet_enemy",
   "bullet_ship",
@@ -16,6 +16,24 @@ export const imagesPath = [
   `${imagePath}/bullet_ship.png`,
   `${imagePath}/enemy.png`,
   `${imagePath}/ship.png`
+];
+
+/*               SOUNDS              */
+
+const soundPath = `../assets/sounds`;
+
+export const soundsName = [
+  "background",
+  "enemyDestroy",
+  "gameOver",
+  "shipBullet"
+];
+
+export const soundsPath = [
+  `${soundPath}/background.wav`,
+  `${soundPath}/enemyDestroy.wav`,
+  `${soundPath}/gameOver.wav`,
+  `${soundPath}/shipBullet.wav`
 ];
 
 /*            EVENT KEYCODE          */

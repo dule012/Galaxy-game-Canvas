@@ -11,13 +11,13 @@ class EnemyBullet {
     this.gameData = gameData;
   }
 
-  draw() {
-    const { image, gameData } = this;
+  draw(image) {
+    const { gameData } = this;
     const { ctx, enemyBulletX, enemyBulletY } = gameData;
     ctx.drawImage(image, enemyBulletX, enemyBulletY);
   }
 
-  static setEnemyBullet(container) {
+  static setEnemyBullet(container, image) {
     const numberOfEnemyBullets = enemies => Math.round(Math.random() * enemies);
     const modifiedEnemyBulletObj = obj => ({
       ...obj,
@@ -33,7 +33,7 @@ class EnemyBullet {
       .map(
         item =>
           new EnemyBullet(
-            container.loadedImages.bullet_enemy,
+            image,
             modifiedEnemyBulletObj(container.enemies[item].gameData)
           )
       );

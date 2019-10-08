@@ -1,20 +1,10 @@
-import { imagesPath } from "../constants/index.js";
-
-const getSingleImage = src =>
-  new Promise((res, rej) => {
-    const image = new Image();
-    image.src = src;
-    image.addEventListener("load", () => {
-      res(image);
-    });
-  });
-
-export const loadImages = () => imagesPath.map(item => getSingleImage(item));
-
 export const transformArrayToObject = (arrOfPropNames, dataArr) => {
   const obj = {};
   dataArr.map((item, index) => (obj[arrOfPropNames[index]] = item));
   return obj;
 };
 
+export const isArrayEmpty = arr => Array.isArray(arr) && arr.length === 0;
+
 export const getHtmlElement = data => document.querySelector(data);
+export const getHtmlElements = data => document.querySelectorAll(data);

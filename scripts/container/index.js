@@ -35,7 +35,7 @@ class Container {
     this.score = 0;
   }
 
-  endGame(id, removeEventListenersHandler) {
+  endGame(id) {
     const isShipShotEnemyBullet = this.enemiesBullets.find(
       enemy =>
         enemy.gameData.enemyBulletX >= this.shipX &&
@@ -58,7 +58,6 @@ class Container {
               item.gameData.enemyY + enemyData.height))
     );
     if (isShipShotEnemyBullet || isShipCollideWithEnemy) {
-      removeEventListenersHandler();
       cancelAnimationFrame(id);
     }
   }

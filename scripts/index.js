@@ -4,8 +4,13 @@ import Ship from "./components/ship.js";
 import ShipBullet from "./components/shipBullet.js";
 import EnemyBullet from "./components/enemyBullet.js";
 import Enemy from "./components/enemy.js";
-import { images, eventKeyCode } from "../constants/index.js";
-import { loadImages, transformArrayToObject } from "../utility/helpers.js";
+import LoadResources from "./components/loadResources.js";
+import {
+  imagesName,
+  eventKeyCode,
+  imagesPath,
+  soundsPath
+} from "../constants/index.js";
 
 const SPACE = "space";
 
@@ -14,52 +19,64 @@ class App {
     this.container = new Container();
     this.backgroundComponent = new Background();
     this.shipComponent = new Ship();
+    this.loadedResources = new LoadResources(imagesPath, soundsPath);
   }
 
   init() {
-    Promise.all(loadImages()).then(data => {
-      this.loadedImages = transformArrayToObject(images, data);
-      this.container.loadedImages = this.loadedImages;
-      this.initEvents();
-      this.animationFrameInit();
-      Enemy.initEnemies.call(this.container, this.loadedImages.enemy);
-      EnemyBullet.setEnemyBullet(this.container);
+    this.loadedResources.load();
+    this.setGameParts();
+  }
 
-      this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
-    });
+  setGameParts() {
+    if (!this.loadedResources.isAllLoaded)
+      return setTimeout(this.setGameParts.bind(this), 1);
+    this.initEvents();
+    this.animationFrameInit();
+    this.startGame();
+  }
+
+  startGame() {
+    Enemy.initEnemies.call(
+      this.container,
+      this.loadedResources.loadedImages.enemy
+    );
+    EnemyBullet.setEnemyBullet(
+      this.container,
+      this.loadedResources.loadedImages.bullet_enemy
+    );
+    // this.backgroundSound();
+    this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
+  }
+
+  backgroundSound() {
+    const play = this.loadedResources.loadedSounds.background.play();
+    play
+      .then(() => {
+        console.log(play);
+        this.loadedResources.loadedSounds.background.play();
+      })
+      .catch(err => {
+        console.log(err);
+        setTimeout(this.backgroundSound.bind(this), 1);
+      });
   }
 
   initEvents() {
-    window.addEventListener("keydown", this.handleKeyDown.call(this), false);
-    window.addEventListener("keyup", this.handleKeyUp.call(this), false);
+    window.addEventListener("keydown", this.handleKeyDown.bind(this));
+    window.addEventListener("keyup", this.handleKeyUp.bind(this));
   }
 
-  removeEventListeners() {
-    window.removeEventListener("keydown", this.keyDownListener, false);
-    window.removeEventListener("keyup", this.keyUpListener, false);
-  }
-
-  keyDown(e) {
+  handleKeyDown(e) {
     this.container[eventKeyCode[e.keyCode]] = true;
     if (eventKeyCode[e.keyCode] === SPACE && this.container.fireShipBullet)
       ShipBullet.setShipBullet.call(
         this.container,
-        this.loadedImages.bullet_ship
+        this.loadedResources.loadedImages.bullet_ship
       );
   }
 
-  handleKeyDown() {
-    this.keyDownListener = e => this.keyDown.call(this, e);
-    return this.keyDownListener;
-  }
-
-  keyUp(e) {
+  handleKeyUp(e) {
     this.container[eventKeyCode[e.keyCode]] = false;
-  }
-
-  handleKeyUp() {
-    this.keyUpListener = e => this.keyUp.call(this, e);
-    return this.keyUpListener;
   }
 
   animationFrameInit() {
@@ -75,7 +92,11 @@ class App {
   }
 
   loop() {
-    const { background, ship } = this.loadedImages;
+    const {
+      background,
+      ship,
+      bullet_enemy
+    } = this.loadedResources.loadedImages;
 
     this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
 
@@ -83,12 +104,9 @@ class App {
     this.shipComponent.draw(ship, this.container);
     this.container.enemies.map(item => item.draw());
     this.container.shipBullets.map(shipBulletsPair => shipBulletsPair.draw());
-    this.container.enemiesBullets.map(item => item.draw());
+    this.container.enemiesBullets.map(item => item.draw(bullet_enemy));
 
-    this.container.update(
-      this.animationFrameID,
-      this.removeEventListeners.bind(this)
-    );
+    this.container.update(this.animationFrameID);
   }
 }
 
