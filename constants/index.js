@@ -101,14 +101,15 @@ export const shipBulletSize = {
 export const enemyData = {
   width: 38,
   height: 28,
-  enemiesInRow: 8,
-  enemiesRows: 3,
-  firstEnemyPos: { x: 30, y: 30 },
+  enemiesInRow: 3,
+  enemiesRows: 1,
+  firstEnemyPos: { x: 10, y: 20 },
   marginRight: 22,
   marginTop: 20
 };
 
 export const enemySpeed = 1.5;
+export const enemyArriveSpped = 2;
 
 /*             BULLETS ENEMY            */
 

@@ -1,4 +1,8 @@
-import { enemySpeed, enemyData } from "../../constants/index.js";
+import {
+  enemySpeed,
+  enemyData,
+  enemyArriveSpped
+} from "../../constants/index.js";
 
 class Enemy {
   constructor(image, gameData) {
@@ -23,6 +27,10 @@ class Enemy {
 
   updateBackwardMove() {
     this.gameData.enemyX -= enemySpeed;
+  }
+
+  enemyArrive() {
+    this.gameData.enemyY += enemyArriveSpped;
   }
 
   static initEnemies(image) {
@@ -70,21 +78,60 @@ class Enemy {
     this.shipBullets = filteredShipBullets;
   }
 
-  static updateEnemy() {
-    if (this.isEnemiesMoveForward) {
-      this.enemies.map(item => item.updateForwardMove());
+  static enemyLeap() {
+    if (this.areEnemiesArrived && !this.enemyIndexLeap) {
+      this.enemyIndexLeap = Math.round(
+        Math.random() * (this.enemies.length - 1)
+      );
       if (
-        this.enemies.find(
-          item =>
-            item.gameData.enemyX + enemyData.width >=
-            this.ctx.canvas.clientWidth
-        )
-      )
-        this.isEnemiesMoveForward = false;
+        this.enemies[this.enemyIndexLeap].gameData.enemyX >= this.shipX &&
+        this.enemies[this.enemyIndexLeap].gameData.enemyY >= this.shipY
+      ) {
+      }
+    }
+  }
+
+  static updateEnemy() {
+    if (!this.areEnemiesArrived) {
+      this.enemies.map(item => item.enemyArrive());
+      if (this.enemies[0].gameData.enemyY >= enemyData.marginTop)
+        this.areEnemiesArrived = true;
     } else {
-      this.enemies.map(item => item.updateBackwardMove());
-      if (this.enemies.find(item => item.gameData.enemyX <= 0))
-        this.isEnemiesMoveForward = true;
+      if (this.isEnemiesMoveForward) {
+        this.enemies.map((item, index) =>
+          index !== this.enemyIndexLeap ? item.updateForwardMove() : null
+        );
+        if (
+          this.enemies.find(
+            item =>
+              item.gameData.enemyX + enemyData.width >=
+              this.ctx.canvas.clientWidth
+          )
+        )
+          this.isEnemiesMoveForward = false;
+      } else {
+        this.enemies.map((item, index) =>
+          index !== this.enemyIndexLeap ? item.updateBackwardMove() : null
+        );
+        if (this.enemies.find(item => item.gameData.enemyX <= 0))
+          this.isEnemiesMoveForward = true;
+      }
+
+      this.enemies[this.enemyIndexLeap].gameData.enemyX >= this.shipX
+        ? (this.enemies[
+            this.enemyIndexLeap
+          ].gameData.enemyX -= enemyArriveSpped)
+        : (this.enemies[
+            this.enemyIndexLeap
+          ].gameData.enemyX += enemyArriveSpped);
+      this.enemies[this.enemyIndexLeap].gameData.enemyY + enemyData.height >=
+      this.shipY
+        ? (this.enemies[
+            this.enemyIndexLeap
+          ].gameData.enemyY -= enemyArriveSpped)
+        : (this.enemies[
+            this.enemyIndexLeap
+          ].gameData.enemyY += enemyArriveSpped);
     }
   }
 }

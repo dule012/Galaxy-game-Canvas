@@ -30,6 +30,10 @@ class Container {
     this.shipBulletY = this.shipY;
     this.fireShipBullet = true;
     this.enemies = [];
+    this.areEnemiesArrived = false;
+    this.enemyIndexLeap;
+    this.enemyLeapX;
+    this.enemyLeapY;
     this.isEnemiesMoveForward = true;
     this.enemiesBullets = [];
     this.score = 0;
@@ -62,11 +66,12 @@ class Container {
     }
   }
 
-  update(animationFrameID, removeEventListeners) {
-    this.endGame(animationFrameID, removeEventListeners);
+  update(animationFrameID) {
+    this.endGame(animationFrameID);
     Enemy.checkEnemyShoted.call(this);
     Ship.updateShip.call(this);
     Enemy.updateEnemy.call(this);
+    Enemy.enemyLeap.call(this);
     EnemyBullet.updateEnemyBullet.call(this);
     ShipBullet.updateShipBullet.call(this);
   }
