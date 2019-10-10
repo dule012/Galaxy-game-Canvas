@@ -36,6 +36,7 @@ class App {
   }
 
   startGame() {
+    this.container.loadedImages = this.loadedResources.loadedImages;
     Enemy.initEnemies.call(
       this.container,
       this.loadedResources.loadedImages.enemy
@@ -105,6 +106,7 @@ class App {
     this.container.enemies.map(item => item.draw());
     this.container.shipBullets.map(shipBulletsPair => shipBulletsPair.draw());
     this.container.enemiesBullets.map(item => item.draw(bullet_enemy));
+    this.container.drawScore();
 
     this.container.update(this.animationFrameID);
   }

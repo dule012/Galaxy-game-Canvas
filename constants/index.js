@@ -65,7 +65,7 @@ export const backgroundStartPosition = {
   y: 0
 };
 
-export const backgroundSlidingSpeed = 0.8;
+export const backgroundSlidingSpeed = 1.2;
 
 /*              SHIP                   */
 
@@ -101,15 +101,16 @@ export const shipBulletSize = {
 export const enemyData = {
   width: 38,
   height: 28,
-  enemiesInRow: 3,
-  enemiesRows: 1,
-  firstEnemyPos: { x: 10, y: 20 },
+  enemiesInRow: 8,
+  enemiesRows: 3,
+  firstEnemyPos: { x: 10, y: -140 },
   marginRight: 22,
   marginTop: 20
 };
 
 export const enemySpeed = 1.5;
-export const enemyArriveSpped = 2;
+export const enemyArriveSpped = 2.7;
+export const enemyLeapSpeed = 2.5;
 
 /*             BULLETS ENEMY            */
 
@@ -119,3 +120,14 @@ export const enemyBulletData = {
 };
 export const frequentEnemyFireBullets = 1000;
 export const enemyBulletSpeed = 4.2;
+
+/*               SCORE                   */
+
+export const scoreData = {
+  scoreText: "Score:",
+  x: 510,
+  y: 18,
+  newPoints: 10,
+  color: "blue",
+  font: "bold 16px vedrana, sans-serif"
+};

@@ -10,7 +10,8 @@ import {
   shipStartPosition,
   backgroundStartPosition,
   enemyData,
-  enemyBulletData
+  enemyBulletData,
+  scoreData
 } from "../../constants/index.js";
 
 class Container {
@@ -31,7 +32,7 @@ class Container {
     this.fireShipBullet = true;
     this.enemies = [];
     this.areEnemiesArrived = false;
-    this.enemyIndexLeap;
+    this.enemyIndexLeap = null;
     this.enemyLeapX;
     this.enemyLeapY;
     this.isEnemiesMoveForward = true;
@@ -66,12 +67,27 @@ class Container {
     }
   }
 
+  drawScore() {
+    this.ctx.font = scoreData.font;
+    this.ctx.fillStyle = scoreData.color;
+    this.ctx.fillText(
+      `${scoreData.scoreText}${this.score}`,
+      scoreData.x,
+      scoreData.y
+    );
+  }
+
+  updateScore() {
+    this.score += scoreData.newPoints;
+  }
+
   update(animationFrameID) {
     this.endGame(animationFrameID);
-    Enemy.checkEnemyShoted.call(this);
+    Enemy.newEnemyWave.call(this, Enemy.initEnemies);
+    Enemy.initEnemyLeap.call(this);
+    Enemy.checkEnemyShoted.call(this, this.enemies[this.enemyIndexLeap]);
     Ship.updateShip.call(this);
-    Enemy.updateEnemy.call(this);
-    Enemy.enemyLeap.call(this);
+    Enemy.updateEnemy.call(this, this.enemies[this.enemyIndexLeap]);
     EnemyBullet.updateEnemyBullet.call(this);
     ShipBullet.updateShipBullet.call(this);
   }

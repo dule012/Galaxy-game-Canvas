@@ -1,8 +1,11 @@
+import Container from "../container/index.js";
 import {
   enemySpeed,
   enemyData,
-  enemyArriveSpped
+  enemyArriveSpped,
+  enemyLeapSpeed
 } from "../../constants/index.js";
+import { isArrayEmpty, isNumber } from "../../utility/helpers.js";
 
 class Enemy {
   constructor(image, gameData) {
@@ -53,7 +56,7 @@ class Enemy {
       .flat(1);
   }
 
-  static checkEnemyShoted() {
+  static checkEnemyShoted(obj) {
     const findShoted = (enemy, shipBullet) =>
       shipBullet.gameData.shipBulletX >= enemy.gameData.enemyX &&
       shipBullet.gameData.shipBulletX <=
@@ -69,29 +72,73 @@ class Enemy {
       return Boolean(!shotedEnemy);
     });
 
-    this.enemies = this.enemies.filter(enemy => {
+    let shotedEnemyArr = [];
+    const filteredEnemies = this.enemies.filter((enemy, index) => {
       const shotedEnemy = this.shipBullets.find(shipBullet =>
         findShoted(enemy, shipBullet)
       );
+      if (this.areEnemiesArrived)
+        obj.shotedEnemyLeap.call(this, shotedEnemy, index);
+
+      if (shotedEnemy && this.enemyIndexLeap > index)
+        shotedEnemyArr.push(index);
+
+      if (shotedEnemy) this.updateScore();
+
       return Boolean(!shotedEnemy);
     });
+    if (this.areEnemiesArrived && obj)
+      obj.updateEnemyIndexLeap.call(this, shotedEnemyArr);
+    this.enemies = filteredEnemies;
     this.shipBullets = filteredShipBullets;
   }
 
-  static enemyLeap() {
-    if (this.areEnemiesArrived && !this.enemyIndexLeap) {
-      this.enemyIndexLeap = Math.round(
-        Math.random() * (this.enemies.length - 1)
-      );
-      if (
-        this.enemies[this.enemyIndexLeap].gameData.enemyX >= this.shipX &&
-        this.enemies[this.enemyIndexLeap].gameData.enemyY >= this.shipY
-      ) {
-      }
+  shotedEnemyLeap(shotedEnemy, index) {
+    if (shotedEnemy && index === this.enemyIndexLeap)
+      this.enemyIndexLeap = null;
+  }
+
+  updateEnemyIndexLeap(arr) {
+    if (
+      this.areEnemiesArrived &&
+      isNumber(this.enemyIndexLeap) &&
+      !isArrayEmpty(arr)
+    ) {
+      this.enemyIndexLeap -= arr.length;
     }
   }
 
-  static updateEnemy() {
+  static initEnemyLeap() {
+    if (
+      this.areEnemiesArrived &&
+      !isNumber(this.enemyIndexLeap) &&
+      !isArrayEmpty(this.enemies)
+    ) {
+      this.enemyIndexLeap = Math.round(
+        Math.random() * (this.enemies.length - 1)
+      );
+    }
+  }
+
+  updateEnemyLeaped(obj) {
+    if (isNumber(this.enemyIndexLeap)) {
+      obj.gameData.enemyX >= this.shipX
+        ? (obj.gameData.enemyX -= enemyLeapSpeed)
+        : (obj.gameData.enemyX += enemyLeapSpeed);
+      obj.gameData.enemyY + enemyData.height >= this.shipY
+        ? (obj.gameData.enemyY -= enemyLeapSpeed)
+        : (obj.gameData.enemyY += enemyLeapSpeed);
+    }
+  }
+
+  static newEnemyWave(func) {
+    if (isArrayEmpty(this.enemies)) {
+      this.areEnemiesArrived = false;
+      func.call(this, this.loadedImages.enemy);
+    }
+  }
+
+  static updateEnemy(obj) {
     if (!this.areEnemiesArrived) {
       this.enemies.map(item => item.enemyArrive());
       if (this.enemies[0].gameData.enemyY >= enemyData.marginTop)
@@ -116,22 +163,7 @@ class Enemy {
         if (this.enemies.find(item => item.gameData.enemyX <= 0))
           this.isEnemiesMoveForward = true;
       }
-
-      this.enemies[this.enemyIndexLeap].gameData.enemyX >= this.shipX
-        ? (this.enemies[
-            this.enemyIndexLeap
-          ].gameData.enemyX -= enemyArriveSpped)
-        : (this.enemies[
-            this.enemyIndexLeap
-          ].gameData.enemyX += enemyArriveSpped);
-      this.enemies[this.enemyIndexLeap].gameData.enemyY + enemyData.height >=
-      this.shipY
-        ? (this.enemies[
-            this.enemyIndexLeap
-          ].gameData.enemyY -= enemyArriveSpped)
-        : (this.enemies[
-            this.enemyIndexLeap
-          ].gameData.enemyY += enemyArriveSpped);
+      if (obj) obj.updateEnemyLeaped.call(this, obj);
     }
   }
 }
