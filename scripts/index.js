@@ -45,21 +45,8 @@ class App {
       this.container,
       this.loadedResources.loadedImages.bullet_enemy
     );
-    // this.backgroundSound();
-    this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
-  }
 
-  backgroundSound() {
-    const play = this.loadedResources.loadedSounds.background.play();
-    play
-      .then(() => {
-        console.log(play);
-        this.loadedResources.loadedSounds.background.play();
-      })
-      .catch(err => {
-        console.log(err);
-        setTimeout(this.backgroundSound.bind(this), 1);
-      });
+    this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
   }
 
   initEvents() {

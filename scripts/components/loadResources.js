@@ -9,7 +9,8 @@ class LoadResources {
     this.imagesArr = imagesArr;
     this.soundsArr = soundsArr;
     this.loadedImages = [];
-    this.loadedSounds = [];
+    this.createdSounds = [];
+    this.soundsReadyToPlay = [];
     this.isAllLoaded = false;
     this.isLoadStarted = false;
   }
@@ -32,34 +33,44 @@ class LoadResources {
   loadSingleAudio(src) {
     const audio = new Audio(src);
     audio.volume = 0.25;
-    if (src.indexOf(BACKGROUND) !== -1) audio.loop = true;
+    // if (src.indexOf(BACKGROUND) !== -1)
+    audio.loop = true;
+    audio.load();
     return audio;
   }
 
-  loadAllSounds() {
-    this.loadedSounds = this.soundsArr.map(item => this.loadSingleAudio(item));
+  createSounds() {
+    this.createdSounds = this.soundsArr.map(item => this.loadSingleAudio(item));
   }
 
   initLoad() {
     if (!this.isLoadStarted) {
       this.loadAllImages();
-      this.loadAllSounds();
+      this.createSounds();
       this.isLoadStarted = true;
     }
   }
 
   checkLoad() {
     this.initLoad();
-    const isAllSoundsLoaded = this.loadedSounds.filter(
-      item => item.readyState < AUDIO_LOADED_READY_STATE
+    this.createdSounds.map(item =>
+      item
+        .play()
+        .then(() => this.soundsReadyToPlay.push(true))
+        .catch(() => {})
     );
 
-    if (isArrayEmpty(isAllSoundsLoaded))
-      this.loadedSounds = transformArrayToObject(soundsName, this.loadedSounds);
+    if (this.createdSounds.length === this.soundsReadyToPlay.length)
+      return (this.createdSounds = transformArrayToObject(
+        soundsName,
+        this.createdSounds
+      ));
+
+    this.soundsReadyToPlay = [];
   }
 
   load() {
-    if (!Array.isArray(this.loadedImages) && !Array.isArray(this.loadedSounds))
+    if (!Array.isArray(this.loadedImages) && !Array.isArray(this.createdSounds))
       return (this.isAllLoaded = true);
     this.checkLoad();
     setTimeout(this.load.bind(this), 1);
