@@ -65,14 +65,16 @@ class App {
   }
 
   setNewGame() {
-    getHtmlElement(ID_END_GAME_INFO).style.display = "none";
+    App.isVisibleEndGame(false);
     this.container = new Container();
     this.container.setNewProp(PROP_NAME, this.loadedResources.loadedImages);
     this.startGame();
   }
 
-  static displayEndGame() {
-    getHtmlElement(ID_END_GAME_INFO).style.display = "block";
+  static isVisibleEndGame(isVisible) {
+    isVisible
+      ? (getHtmlElement(ID_END_GAME_INFO).style.display = "block")
+      : (getHtmlElement(ID_END_GAME_INFO).style.display = "none");
   }
 
   animationFrameInit() {

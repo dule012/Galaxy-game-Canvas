@@ -85,7 +85,7 @@ export const enemyData = {
   height: 28,
   enemiesInRow: 8,
   enemiesRows: 3,
-  firstEnemyPos: { x: 10, y: -140 },
+  firstEnemyPos: { x: 10, y: -150 },
   marginRight: 22,
   marginTop: 20
 };

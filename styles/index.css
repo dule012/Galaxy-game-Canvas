@@ -37,3 +37,7 @@ body {
   margin-top: 50px;
   cursor: pointer;
 }
+
+#newGame:hover {
+  color: white;
+}

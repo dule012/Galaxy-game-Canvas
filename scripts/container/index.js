@@ -65,7 +65,7 @@ class Container {
     );
     if (isShipShotEnemyBullet || isShipCollideWithEnemy) {
       cancelAnimationFrame(id);
-      App.displayEndGame();
+      App.isVisibleEndGame(true);
     }
   }
 

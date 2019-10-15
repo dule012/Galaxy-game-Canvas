@@ -2,7 +2,8 @@ import {
   enemySpeed,
   enemyData,
   enemyArriveSpped,
-  enemyLeapSpeed
+  enemyLeapSpeed,
+  shipSize
 } from "../../constants/index.js";
 import { isArrayEmpty, isNumber } from "../../utility/helpers.js";
 
@@ -119,15 +120,13 @@ class Enemy {
     }
   }
 
-  updateEnemyLeaped(obj) {
-    if (isNumber(this.enemyIndexLeap)) {
-      obj.gameData.enemyX >= this.shipX
-        ? (obj.gameData.enemyX -= enemyLeapSpeed)
-        : (obj.gameData.enemyX += enemyLeapSpeed);
-      obj.gameData.enemyY + enemyData.height >= this.shipY
-        ? (obj.gameData.enemyY -= enemyLeapSpeed)
-        : (obj.gameData.enemyY += enemyLeapSpeed);
-    }
+  updateEnemyLeaped(enemyLeapObj) {
+    if (enemyLeapObj.gameData.enemyX + enemyData.width / 2 < this.shipX)
+      enemyLeapObj.gameData.enemyX += enemyLeapSpeed;
+    if (enemyLeapObj.gameData.enemyX > this.shipX + shipSize.width)
+      enemyLeapObj.gameData.enemyX -= enemyLeapSpeed;
+    if (enemyLeapObj.gameData.enemyY + enemyData.height < this.shipY)
+      enemyLeapObj.gameData.enemyY += enemyLeapSpeed;
   }
 
   static newEnemyWave(func) {
@@ -137,7 +136,7 @@ class Enemy {
     }
   }
 
-  static updateEnemy(obj) {
+  static updateEnemy(enemyLeapObj) {
     if (!this.areEnemiesArrived) {
       this.enemies.map(item => item.enemyArrive());
       if (this.enemies[0].gameData.enemyY >= enemyData.marginTop)
@@ -162,7 +161,7 @@ class Enemy {
         if (this.enemies.find(item => item.gameData.enemyX <= 0))
           this.isEnemiesMoveForward = true;
       }
-      if (obj) obj.updateEnemyLeaped.call(this, obj);
+      if (enemyLeapObj) enemyLeapObj.updateEnemyLeaped.call(this, enemyLeapObj);
     }
   }
 }
