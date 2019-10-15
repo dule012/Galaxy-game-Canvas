@@ -2,6 +2,7 @@ import Enemy from "../components/enemy.js";
 import EnemyBullet from "../components/enemyBullet.js";
 import ShipBullet from "../components/shipBullet.js";
 import Ship from "../components/ship.js";
+import App from "../index.js";
 import { getHtmlElement } from "../../utility/helpers.js";
 import {
   CANVAS,
@@ -64,7 +65,12 @@ class Container {
     );
     if (isShipShotEnemyBullet || isShipCollideWithEnemy) {
       cancelAnimationFrame(id);
+      App.displayEndGame();
     }
+  }
+
+  setNewProp(name, value) {
+    this[name] = value;
   }
 
   drawScore() {

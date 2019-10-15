@@ -5,45 +5,38 @@ import ShipBullet from "./components/shipBullet.js";
 import EnemyBullet from "./components/enemyBullet.js";
 import Enemy from "./components/enemy.js";
 import LoadResources from "./components/loadResources.js";
-import {
-  imagesName,
-  eventKeyCode,
-  imagesPath,
-  soundsPath
-} from "../constants/index.js";
+import { eventKeyCode, imagesPath } from "../constants/index.js";
+import { getHtmlElement } from "../utility/helpers.js";
 
 const SPACE = "space";
+const PROP_NAME = "loadedImages";
+const ID_NEW_GAME = "#newGame";
+const ID_END_GAME_INFO = "#endGameInfo";
 
 class App {
   constructor() {
     this.container = new Container();
     this.backgroundComponent = new Background();
     this.shipComponent = new Ship();
-    this.loadedResources = new LoadResources(imagesPath, soundsPath);
+    this.loadedResources = new LoadResources(imagesPath);
   }
 
   init() {
-    this.loadedResources.load();
-    this.setGameParts();
+    this.loadedResources.load().then(() => this.setGameParts());
   }
 
   setGameParts() {
-    if (!this.loadedResources.isAllLoaded)
-      return setTimeout(this.setGameParts.bind(this), 1);
     this.initEvents();
     this.animationFrameInit();
+    this.container.setNewProp(PROP_NAME, this.loadedResources.loadedImages);
     this.startGame();
   }
 
   startGame() {
-    this.container.loadedImages = this.loadedResources.loadedImages;
-    Enemy.initEnemies.call(
-      this.container,
-      this.loadedResources.loadedImages.enemy
-    );
+    Enemy.initEnemies.call(this.container, this.container.loadedImages.enemy);
     EnemyBullet.setEnemyBullet(
       this.container,
-      this.loadedResources.loadedImages.bullet_enemy
+      this.container.loadedImages.bullet_enemy
     );
 
     this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
@@ -52,6 +45,10 @@ class App {
   initEvents() {
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     window.addEventListener("keyup", this.handleKeyUp.bind(this));
+    getHtmlElement(ID_NEW_GAME).addEventListener(
+      "click",
+      this.setNewGame.bind(this)
+    );
   }
 
   handleKeyDown(e) {
@@ -59,12 +56,23 @@ class App {
     if (eventKeyCode[e.keyCode] === SPACE && this.container.fireShipBullet)
       ShipBullet.setShipBullet.call(
         this.container,
-        this.loadedResources.loadedImages.bullet_ship
+        this.container.loadedImages.bullet_ship
       );
   }
 
   handleKeyUp(e) {
     this.container[eventKeyCode[e.keyCode]] = false;
+  }
+
+  setNewGame() {
+    getHtmlElement(ID_END_GAME_INFO).style.display = "none";
+    this.container = new Container();
+    this.container.setNewProp(PROP_NAME, this.loadedResources.loadedImages);
+    this.startGame();
+  }
+
+  static displayEndGame() {
+    getHtmlElement(ID_END_GAME_INFO).style.display = "block";
   }
 
   animationFrameInit() {
@@ -80,11 +88,7 @@ class App {
   }
 
   loop() {
-    const {
-      background,
-      ship,
-      bullet_enemy
-    } = this.loadedResources.loadedImages;
+    const { background, ship, bullet_enemy } = this.container.loadedImages;
 
     this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
 
@@ -98,5 +102,7 @@ class App {
     this.container.update(this.animationFrameID);
   }
 }
+
+export default App;
 
 new App().init();

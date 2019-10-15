@@ -1,4 +1,3 @@
-import Container from "../container/index.js";
 import {
   enemySpeed,
   enemyData,
