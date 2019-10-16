@@ -90,10 +90,17 @@ class App {
   }
 
   loop() {
-    const { background, ship, bullet_enemy } = this.container.loadedImages;
+    const {
+      loadedImages: { background, ship, bullet_enemy },
+      ctx
+    } = this.container;
+    const {
+      canvas: { clientWidth, clientHeight }
+    } = ctx;
 
     this.animationFrameID = requestAnimationFrame(this.loop.bind(this));
 
+    ctx.clearRect(0, 0, clientWidth, clientHeight);
     this.backgroundComponent.draw(background, this.container);
     this.shipComponent.draw(ship, this.container);
     this.container.enemies.map(item => item.draw());

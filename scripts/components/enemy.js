@@ -127,6 +127,8 @@ class Enemy {
       enemyLeapObj.gameData.enemyX -= enemyLeapSpeed;
     if (enemyLeapObj.gameData.enemyY + enemyData.height < this.shipY)
       enemyLeapObj.gameData.enemyY += enemyLeapSpeed;
+    if (enemyLeapObj.gameData.enemyY + enemyData.height > this.shipY)
+      enemyLeapObj.gameData.enemyY -= enemyLeapSpeed;
   }
 
   static newEnemyWave(func) {
