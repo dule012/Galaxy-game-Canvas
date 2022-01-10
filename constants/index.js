@@ -7,7 +7,7 @@ export const imagesName = [
   "bullet_enemy",
   "bullet_ship",
   "enemy",
-  "ship"
+  "ship",
 ];
 
 export const imagesPath = [
@@ -15,7 +15,7 @@ export const imagesPath = [
   `${imagePath}/bullet_enemy.png`,
   `${imagePath}/bullet_ship.png`,
   `${imagePath}/enemy.png`,
-  `${imagePath}/ship.png`
+  `${imagePath}/ship.png`,
 ];
 
 /*            EVENT KEYCODE          */
@@ -25,7 +25,7 @@ export const eventKeyCode = {
   38: "arrowUp",
   39: "arrowRight",
   40: "arrowDown",
-  32: "space"
+  32: "space",
 };
 
 /*              SCORE                 */
@@ -44,7 +44,7 @@ const canvasHeight = 360;
 
 export const backgroundStartPosition = {
   x: 0,
-  y: 0
+  y: 0,
 };
 
 export const backgroundSlidingSpeed = 1.2;
@@ -53,12 +53,12 @@ export const backgroundSlidingSpeed = 1.2;
 
 export const shipSize = {
   width: 40,
-  height: 26
+  height: 26,
 };
 
 export const shipStartPosition = {
   x: canvasWidth / 2 - shipSize.width / 2,
-  y: canvasHeight - shipSize.height
+  y: canvasHeight - shipSize.height,
 };
 
 export const shipSpeed = 3;
@@ -68,14 +68,14 @@ export const shipSpeed = 3;
 export const bulletsPairPosition = {
   firstBulletX: 5,
   secondBulletX: 33,
-  bulletY: 6
+  bulletY: 6,
 };
 export const shipBulletHeight = 14;
 export const bulletSpeed = 2.4;
 export const timeBetweenShipBullets = 200;
 export const shipBulletSize = {
   width: 2,
-  height: 14
+  height: 14,
 };
 
 /*                ENEMIES            */
@@ -87,7 +87,7 @@ export const enemyData = {
   enemiesRows: 3,
   firstEnemyPos: { x: 10, y: -150 },
   marginRight: 22,
-  marginTop: 20
+  marginTop: 20,
 };
 
 export const enemySpeed = 1.5;
@@ -98,10 +98,10 @@ export const enemyLeapSpeed = 2.5;
 
 export const enemyBulletData = {
   width: 2,
-  height: 14
+  height: 14,
 };
 export const frequentEnemyFireBullets = 1000;
-export const enemyBulletSpeed = 4.2;
+export const enemyBulletSpeed = 3.9;
 
 /*               SCORE                   */
 
@@ -111,5 +111,5 @@ export const scoreData = {
   y: 18,
   newPoints: 10,
   color: "blue",
-  font: "bold 16px vedrana, sans-serif"
+  font: "bold 16px vedrana, sans-serif",
 };
